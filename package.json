@@ -1,9 +1,9 @@
 {
-  "name": "@199-biotechnologies/resend-mcp",
+  "name": "resend-mcp-server",
   "version": "2.0.0",
   "main": "build/index.js",
   "bin": {
-    "resend-mcp": "./build/index.js"
+    "resend-mcp-server": "./build/index.js"
   },
   "keywords": ["mcp", "resend", "email", "api", "claude", "modelcontextprotocol"],
   "author": "199 Biotechnologies",

@@ -21,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - License file (MIT)
 
 ### Changed
-- Package name to @199-biotechnologies/resend-mcp for NPM publishing
+- Package name to resend-mcp-server for NPM publishing
 - Server name to "resend-mcp" for clarity
 - Improved error handling and response formatting
 - Enhanced TypeScript types and schemas

@@ -48,18 +48,18 @@ This MCP server implements **all** Resend API endpoints:
 You can run the Resend MCP server directly without installation:
 
 ```bash
-npx @199-biotechnologies/resend-mcp --key YOUR_RESEND_API_KEY
+npx resend-mcp-server --key YOUR_RESEND_API_KEY
 ```
 
 ### Global Installation via NPM
 
 ```bash
-npm install -g @199-biotechnologies/resend-mcp
+npm install -g resend-mcp-server
 ```
 
 Then run:
 ```bash
-resend-mcp --key YOUR_RESEND_API_KEY
+resend-mcp-server --key YOUR_RESEND_API_KEY
 ```
 
 ### Local Installation
@@ -93,7 +93,7 @@ Add the following to your Claude Desktop configuration file:
     "resend": {
       "command": "npx",
       "args": [
-        "@199-biotechnologies/resend-mcp",
+        "resend-mcp-server",
         "--key",
         "YOUR_RESEND_API_KEY"
       ]
@@ -107,7 +107,7 @@ Add the following to your Claude Desktop configuration file:
 {
   "mcpServers": {
     "resend": {
-      "command": "resend-mcp",
+      "command": "resend-mcp-server",
       "args": [
         "--key",
         "YOUR_RESEND_API_KEY"
@@ -212,7 +212,7 @@ You can test the server using the MCP inspector or by configuring it in Claude D
 
 2. **Permission errors with NPX**
    - Try clearing the NPX cache: `npx clear-npx-cache`
-   - Or install globally: `npm install -g @199-biotechnologies/resend-mcp`
+   - Or install globally: `npm install -g resend-mcp-server`
 
 3. **Server not appearing in Claude**
    - Check your configuration file syntax
