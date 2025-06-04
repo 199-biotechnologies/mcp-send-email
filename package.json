@@ -1,11 +1,22 @@
 {
-  "name": "send-email",
-  "version": "1.0.0",
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "name": "@199-biotechnologies/resend-mcp",
+  "version": "2.0.0",
+  "main": "build/index.js",
+  "bin": {
+    "resend-mcp": "./build/index.js"
+  },
+  "keywords": ["mcp", "resend", "email", "api", "claude", "modelcontextprotocol"],
+  "author": "199 Biotechnologies",
+  "license": "MIT",
+  "description": "Complete MCP server for Resend API with all endpoints - send emails, manage domains, contacts, broadcasts, and more",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/199-biotechnologies/mcp-send-email.git"
+  },
+  "homepage": "https://github.com/199-biotechnologies/mcp-send-email#readme",
+  "bugs": {
+    "url": "https://github.com/199-biotechnologies/mcp-send-email/issues"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.5.0",
     "@react-email/components": "^0.0.33",
@@ -23,6 +34,16 @@
   },
   "type": "module",
   "scripts": {
-    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\""
+    "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+    "prepublishOnly": "npm run build"
+  },
+  "files": [
+    "build/",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -1,34 +1,47 @@
 # Changelog
 
-All notable changes to the MCP Send Email project will be documented in this file.
+All notable changes to the Resend MCP Server will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.0.0] - 2025-01-06
 
 ### Added
-- Improved instructions in README
-- Removed test email address from example email.md
-
-### Added
-- CC and BCC support for email recipients
-- Full request/response logging for improved debugging
-- New "Features" section in README documentation
-- Usage examples for CC/BCC in email.md
-
-### Fixed
-- Sender email handling with Resend's API
-- Type definitions for email request object
+- Complete implementation of ALL Resend API endpoints
+- Email batch sending (up to 100 emails)
+- Email management: get, update, cancel scheduled emails
+- Full domain management: create, list, get, update, delete, verify
+- API key management: create with permissions, list, delete
+- Contact and audience management: full CRUD operations
+- Broadcast campaigns: create, send, schedule, manage
+- NPM/NPX support for easy installation
+- Comprehensive documentation and examples
+- Support for file attachments, custom headers, and email tags
+- License file (MIT)
 
 ### Changed
-- Enhanced console logging for easier troubleshooting
-- Updated documentation with Resend's email verification requirements
+- Package name to @199-biotechnologies/resend-mcp for NPM publishing
+- Server name to "resend-mcp" for clarity
+- Improved error handling and response formatting
+- Enhanced TypeScript types and schemas
+- Major refactoring to support all API endpoints
 
-## [1.0.0] - 2025-02-24
+### Technical
+- Added support for all Resend API v2 endpoints
+- Improved email sending with full attachment and header support
+- Added proper NPM bin configuration for global installation
+- Added shebang for direct execution
+- Improved build process with proper permissions
+
+## [1.0.0] - 2024-12-20
+
 ### Added
 - Initial release
 - Basic email sending functionality
 - HTML email support
 - Email scheduling capability
 - Reply-to addressing
+- CC and BCC support for email recipients
+- Full request/response logging for improved debugging
+- Natural language scheduling support

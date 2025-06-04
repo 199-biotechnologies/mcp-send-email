@@ -1,0 +1,31 @@
+# Source files
+*.ts
+!*.d.ts
+
+# Development files
+tsconfig.json
+.env
+.env.*
+
+# Git files
+.git
+.gitignore
+
+# Documentation source
+email.md
+CHANGELOG.md
+resend-openapi.yaml
+
+# IDE files
+.vscode
+.idea
+
+# Build artifacts
+*.log
+node_modules
+
+# Test files
+test/
+tests/
+*.test.ts
+*.spec.ts
