@@ -38,6 +38,7 @@ This MCP server implements **all** Resend API endpoints:
 - **Create Broadcast** - Design email campaigns
 - **List Broadcasts** - View all broadcasts
 - **Get Broadcast** - Retrieve broadcast details
+- **Update Broadcast** - Update broadcast content and settings
 - **Send Broadcast** - Send or schedule broadcasts
 - **Delete Broadcast** - Remove draft broadcasts
 

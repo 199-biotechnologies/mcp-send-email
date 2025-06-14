@@ -39,7 +39,7 @@ const resend = new Resend(apiKey);
 // Create server instance
 const server = new McpServer({
   name: "resend-mcp",
-  version: "2.0.0",
+  version: "2.0.1",
   description: "Complete MCP server for Resend API with all endpoints",
 });
 
@@ -48,7 +48,14 @@ server.tool(
   "send-email",
   "Send an email using Resend",
   {
-    to: z.union([z.string().email(), z.array(z.string().email())]).describe("Recipient email address(es)"),
+    to: z.union([z.string().email(), z.array(z.string().email())])
+      .refine((val) => {
+        const count = Array.isArray(val) ? val.length : 1;
+        return count <= 50;
+      }, {
+        message: "Maximum 50 recipients allowed per email"
+      })
+      .describe("Recipient email address(es). Max 50."),
     subject: z.string().describe("Email subject line"),
     text: z.string().describe("Plain text email content"),
     html: z
@@ -73,8 +80,12 @@ server.tool(
       ),
     tags: z
       .array(z.object({
-        name: z.string(),
+        name: z.string()
+          .max(256, "Tag name cannot exceed 256 characters")
+          .regex(/^[a-zA-Z0-9_-]+$/, "Tag name can only contain ASCII letters (a-z, A-Z), numbers (0-9), underscores (_), or dashes (-)"),
         value: z.string()
+          .max(256, "Tag value cannot exceed 256 characters")
+          .regex(/^[a-zA-Z0-9_-]+$/, "Tag value can only contain ASCII letters (a-z, A-Z), numbers (0-9), underscores (_), or dashes (-)")
       }))
       .optional()
       .describe("Optional array of tags for the email"),
@@ -82,7 +93,8 @@ server.tool(
       .array(z.object({
         filename: z.string(),
         content: z.string().describe("Base64 encoded file content"),
-        path: z.string().optional()
+        path: z.string().optional(),
+        content_type: z.string().optional().describe("Content type for the attachment, if not set will be derived from the filename property")
       }))
       .optional()
       .describe("Optional array of file attachments"),
@@ -193,7 +205,14 @@ server.tool(
   "Send multiple emails in a single batch (up to 100 emails)",
   {
     emails: z.array(z.object({
-      to: z.union([z.string().email(), z.array(z.string().email())]).describe("Recipient email address(es)"),
+      to: z.union([z.string().email(), z.array(z.string().email())])
+        .refine((val) => {
+          const count = Array.isArray(val) ? val.length : 1;
+          return count <= 50;
+        }, {
+          message: "Maximum 50 recipients allowed per email"
+        })
+        .describe("Recipient email address(es). Max 50."),
       subject: z.string().describe("Email subject line"),
       text: z.string().describe("Plain text email content"),
       from: z.string().email().optional().describe("Sender email address (uses default if not provided)"),
@@ -201,15 +220,6 @@ server.tool(
       cc: z.union([z.string().email(), z.array(z.string().email())]).optional(),
       bcc: z.union([z.string().email(), z.array(z.string().email())]).optional(),
       replyTo: z.union([z.string().email(), z.array(z.string().email())]).optional(),
-      scheduledAt: z.string().optional(),
-      tags: z.array(z.object({
-        name: z.string(),
-        value: z.string()
-      })).optional(),
-      attachments: z.array(z.object({
-        filename: z.string(),
-        content: z.string()
-      })).optional(),
       headers: z.record(z.string()).optional()
     })).max(100).describe("Array of emails to send (maximum 100)")
   },
@@ -965,6 +975,58 @@ server.tool(
         {
           type: "text",
           text: `Broadcast sent successfully! ID: ${response.data?.id}`,
+        },
+      ],
+    };
+  }
+);
+
+server.tool(
+  "update-broadcast",
+  "Update a broadcast (only if created via API)",
+  {
+    broadcastId: z.string().describe("The ID of the broadcast to update"),
+    audienceId: z.string().optional().describe("The ID of the audience to send to"),
+    from: z.string().email().optional().describe("Sender email address"),
+    subject: z.string().optional().describe("Email subject line"),
+    replyTo: z.union([z.string().email(), z.array(z.string().email())]).optional().describe("Reply-to address(es)"),
+    html: z.string().optional().describe("The HTML version of the message"),
+    text: z.string().optional().describe("The plain text version of the message"),
+    name: z.string().optional().describe("The friendly name of the broadcast")
+  },
+  async ({ broadcastId, audienceId, from, subject, replyTo, html, text, name }) => {
+    // Build update payload - only include provided fields
+    const updateData: any = { id: broadcastId };
+    if (audienceId !== undefined) updateData.audience_id = audienceId;
+    if (from !== undefined) updateData.from = from;
+    if (subject !== undefined) updateData.subject = subject;
+    if (replyTo !== undefined) updateData.reply_to = replyTo;
+    if (html !== undefined) updateData.html = html;
+    if (text !== undefined) updateData.text = text;
+    if (name !== undefined) updateData.name = name;
+
+    // Check if the SDK has update method, otherwise use a workaround
+    const response = await (resend.broadcasts as any).update?.(updateData) || 
+      await fetch(`https://api.resend.com/broadcasts/${broadcastId}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updateData)
+      }).then(r => r.json());
+
+    if (response.error) {
+      throw new Error(
+        `Failed to update broadcast: ${JSON.stringify(response.error)}`
+      );
+    }
+
+    return {
+      content: [
+        {
+          type: "text",
+          text: `Broadcast updated successfully! ID: ${response.data?.id || response.id}`,
         },
       ],
     };
